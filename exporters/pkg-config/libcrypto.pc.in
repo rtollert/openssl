@@ -3,9 +3,9 @@ includedir={- $OpenSSL::safe::installdata::INCLUDEDIR -}
 enginesdir={- $OpenSSL::safe::installdata::ENGINESDIR -}
 modulesdir={- $OpenSSL::safe::installdata::MODULESDIR -}
 
-Name: OpenSSL-libcrypto
+Name: OpenSSL-libcrypto{- $OpenSSL::safe::installdata::SHLIB_VARIANT -}
 Description: OpenSSL cryptography library
 Version: {- $OpenSSL::safe::installdata::VERSION -}
-Libs: -L${libdir} -lcrypto
+Libs: -L${libdir} -lcrypto{- $OpenSSL::safe::installdata::SHLIB_VARIANT -}
 Libs.private: {- join(' ', @OpenSSL::safe::installdata::LDLIBS) -}
 Cflags: -I${includedir}

@@ -67,7 +67,7 @@ our \@EXPORT = qw(\$PREFIX
                   \$MODULESDIR \$MODULESDIR_REL
                   \$PKGCONFIGDIR \$PKGCONFIGDIR_REL
                   \$CMAKECONFIGDIR \$CMAKECONFIGDIR_REL
-                  \$VERSION \@LDLIBS);
+                  \$VERSION \@LDLIBS \$SHLIB_VARIANT);
 
 our \$PREFIX             = '$ENV{PREFIX}';
 our \$BINDIR             = '$ENV{BINDIR}';
@@ -90,6 +90,7 @@ our \$VERSION            = '$ENV{VERSION}';
 our \@LDLIBS             =
     # Unix and Windows use space separation, VMS uses comma separation
     split(/ +| *, */, '$ENV{LDLIBS}');
+our \$SHLIB_VARIANT      = '$ENV{SHLIB_VARIANT}';
 
 1;
 _____

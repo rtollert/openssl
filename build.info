@@ -121,6 +121,6 @@ DEPEND[openssl.pc]=libcrypto.pc libssl.pc
 GENERATE[builddata.pm]=util/mkinstallvars.pl \
     PREFIX=. BINDIR=apps LIBDIR= INCLUDEDIR=include APPLINKDIR=ms \
     ENGINESDIR=engines MODULESDIR=providers \
-    "VERSION=$(VERSION)" "LDLIBS=$(LIB_EX_LIBS)"
+    "VERSION=$(VERSION)" "LDLIBS=$(LIB_EX_LIBS)" "SHLIB_VARIANT=$(SHLIB_VARIANT)"
 
 DEPEND[""]=openssl.pc

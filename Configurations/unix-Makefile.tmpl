@@ -78,6 +78,7 @@ MAJOR={- $config{major} -}
 MINOR={- $config{minor} -}
 SHLIB_VERSION_NUMBER={- $config{shlib_version} -}
 SHLIB_TARGET={- $target{shared_target} -}
+SHLIB_VARIANT={- $target{shlib_variant} -}
 
 LIBS={- join(" \\\n" . ' ' x 5,
              fill_lines(" ", $COLUMNS - 5,
