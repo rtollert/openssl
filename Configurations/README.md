@@ -147,6 +147,13 @@ In each table entry, the following keys are significant:
                            into symbol versions is obtained by mapping all
                            letters in the "variant" identifier to upper case
                            and all non-alphanumeric characters to '_'.
+        lib_variant     => Like shlib_variant but applies to static libraries.
+                           Note that when pkgconfig files are installed, they
+                           will honor shlib_variant, not lib_variant: if
+                           'shlib_variant => "-abc"' and
+                           'lib_variant => "-def"', then libcrypto-abc.pc and
+                           libssl-abc.pc will describe how to link against
+                           libcrypto-abc and libssl-abc.
 
         thread_scheme   => The type of threads is used on the
                            configured platform.  Currently known
