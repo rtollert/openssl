@@ -74,6 +74,7 @@ SHLIB_VERSION_NUMBER={- $config{shlib_version} -}
 SHLIB_TARGET={- $target{shared_target} -}
 SHLIB_VARIANT={- $target{shlib_variant} -}
 LIB_VARIANT={- $target{lib_variant} -}
+APP_VARIANT={- $target{app_variant} -}
 
 LIBS={- join(" \\\n" . ' ' x 5,
              fill_lines(" ", $COLUMNS - 5,
@@ -267,6 +268,8 @@ MANDOCS7={-
              fill_lines(" ", $COLUMNS - 9,
                         @{$unified_info{mandocs}->{man7}})) -}
 
+# Note: despite the use of catfile, this indexes into build info and so must not
+# honor app_variant
 APPS_OPENSSL="{- use File::Spec::Functions;
                  catfile("apps","openssl") -}"
 
@@ -509,7 +512,7 @@ build_man_docs: $(MANDOCS1) $(MANDOCS3) $(MANDOCS5) $(MANDOCS7)
 build_html_docs: $(HTMLDOCS1) $(HTMLDOCS3) $(HTMLDOCS5) $(HTMLDOCS7)
 
 build_generated: $(GENERATED_MANDATORY)
-build_libs_nodep: libcrypto$(SHLIB_VARIANT).pc libssl$(SHLIB_VARIANT).pc openssl.pc
+build_libs_nodep: libcrypto$(SHLIB_VARIANT).pc libssl$(SHLIB_VARIANT).pc openssl$(APP_VARIANT).pc
 build_modules_nodep: $(MODULES)
 build_programs_nodep: $(PROGRAMS) $(SCRIPTS)
 
@@ -592,7 +595,7 @@ clean: libclean
 	$(RM) tags TAGS doc-nits md-nits
 	$(RM) -r test/test-runs
 	$(RM) providers/fips*.new
-	$(RM) openssl.pc libcrypto$(SHLIB_VARIANT).pc libssl$(SHLIB_VARIANT).pc
+	$(RM) openssl$(APP_VARIANT).pc libcrypto$(SHLIB_VARIANT).pc libssl$(SHLIB_VARIANT).pc
 	-find . -type l \! -name '.*' -exec $(RM) {} \;
 
 distclean: clean
@@ -764,9 +767,9 @@ install_dev: install_runtime_libs
 	@$(ECHO) "install libssl$(SHLIB_VARIANT).pc -> $(DESTDIR)$(libdir)/pkgconfig/libssl$(SHLIB_VARIANT).pc"
 	@cp libssl$(SHLIB_VARIANT).pc $(DESTDIR)$(libdir)/pkgconfig
 	@chmod 644 $(DESTDIR)$(libdir)/pkgconfig/libssl$(SHLIB_VARIANT).pc
-	@$(ECHO) "install openssl.pc -> $(DESTDIR)$(libdir)/pkgconfig/openssl.pc"
-	@cp openssl.pc $(DESTDIR)$(libdir)/pkgconfig
-	@chmod 644 $(DESTDIR)$(libdir)/pkgconfig/openssl.pc
+	@$(ECHO) "install openssl$(APP_VARIANT).pc -> $(DESTDIR)$(libdir)/pkgconfig/openssl$(APP_VARIANT).pc"
+	@cp openssl$(APP_VARIANT).pc $(DESTDIR)$(libdir)/pkgconfig
+	@chmod 644 $(DESTDIR)$(libdir)/pkgconfig/openssl$(APP_VARIANT).pc
 
 uninstall_dev: uninstall_runtime_libs
 	@$(ECHO) "*** Uninstalling development files"
@@ -812,7 +815,7 @@ uninstall_dev: uninstall_runtime_libs
 	@ : {- output_on() if $disabled{shared}; "" -}
 	$(RM) $(DESTDIR)$(libdir)/pkgconfig/libcrypto$(SHLIB_VARIANT).pc
 	$(RM) $(DESTDIR)$(libdir)/pkgconfig/libssl$(SHLIB_VARIANT).pc
-	$(RM) $(DESTDIR)$(libdir)/pkgconfig/openssl.pc
+	$(RM) $(DESTDIR)$(libdir)/pkgconfig/openssl$(APP_VARIANT).pc
 	-$(RMDIR) $(DESTDIR)$(libdir)/pkgconfig
 	-$(RMDIR) $(DESTDIR)$(libdir)
 
@@ -1391,7 +1394,7 @@ FORCE:
 
 # Building targets ###################################################
 
-libcrypto$(SHLIB_VARIANT).pc libssl$(SHLIB_VARIANT).pc openssl.pc: Makefile $(LIBS) {- join(" ",map { platform->sharedlib_simple($_) // platform->sharedlib_import($_) // platform->sharedlib($_) // () } @{$unified_info{libraries}}) -}
+libcrypto$(SHLIB_VARIANT).pc libssl$(SHLIB_VARIANT).pc openssl$(APP_VARIANT).pc: Makefile $(LIBS) {- join(" ",map { platform->sharedlib_simple($_) // platform->sharedlib_import($_) // platform->sharedlib($_) // () } @{$unified_info{libraries}}) -}
 
 libcrypto$(SHLIB_VARIANT).pc:
 	@ ( echo 'prefix=$(INSTALLTOP)'; \
@@ -1429,7 +1432,7 @@ libssl$(SHLIB_VARIANT).pc:
 	    echo 'Libs: -L$${libdir} -lssl$(SHLIB_VARIANT)'; \
 	    echo 'Cflags: -I$${includedir}' ) > libssl$(SHLIB_VARIANT).pc
 
-openssl.pc:
+openssl$(APP_VARIANT).pc:
 	@ ( echo 'prefix=$(INSTALLTOP)'; \
 	    echo 'exec_prefix=$${prefix}'; \
 	    if [ -n "$(LIBDIR)" ]; then \
@@ -1439,10 +1442,10 @@ openssl.pc:
 	    fi; \
 	    echo 'includedir=$${prefix}/include'; \
 	    echo ''; \
-	    echo 'Name: OpenSSL'; \
+	    echo 'Name: OpenSSL$(APP_VARIANT)'; \
 	    echo 'Description: Secure Sockets Layer and cryptography libraries and tools'; \
 	    echo 'Version: '$(VERSION); \
-	    echo 'Requires: libssl$(SHLIB_VARIANT) libcrypto$(SHLIB_VARIANT)' ) > openssl.pc
+	    echo 'Requires: libssl$(SHLIB_VARIANT) libcrypto$(SHLIB_VARIANT)' ) > openssl$(APP_VARIANT).pc
 
 Makefile: configdata.pm \
           {- join(" \\\n" . ' ' x 10,

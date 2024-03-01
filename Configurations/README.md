@@ -154,6 +154,9 @@ In each table entry, the following keys are significant:
                            'lib_variant => "-def"', then libcrypto-abc.pc and
                            libssl-abc.pc will describe how to link against
                            libcrypto-abc and libssl-abc.
+        app_variant     => Like shlib_variant but applies to built programs.
+                           For example, when 'app_variant => "-abc"', the
+                           name of the OpenSSL utility will be "openssl-abc".
 
         thread_scheme   => The type of threads is used on the
                            configured platform.  Currently known

@@ -33,6 +33,7 @@ sub shlibextsimple      { (my $x = $target{shared_extension} || '.so')
                           $x; }
 sub shlibvariant        { $target{shlib_variant} || "" }
 sub libvariant          { $target{lib_variant} || "" }
+sub appvariant          { $target{app_variant} || "" }
 sub makedepcmd          { $disabled{makedepend} ? undef : $config{makedepcmd} }
 
 # No conversion of assembler extension on Unix
@@ -52,6 +53,17 @@ sub staticname {
     # append '_static' or '_a' some time in the future.
     return platform::BASE::__concat(platform::BASE->staticname($_[1]),
                                     ($_[0]->libvariant() // ''));
+}
+
+sub binname {
+    my $in_binname = platform::BASE->binname($_[1]);
+
+    return $in_binname
+        if $unified_info{attributes}->{programs}->{$_[1]}->{noinst};
+
+    # If this is installed, honor app_variant.
+    return platform::BASE::__concat(platform::BASE->binname($_[1]),
+                                    ($_[0]->appvariant() // ''));
 }
 
 sub sharedname {
